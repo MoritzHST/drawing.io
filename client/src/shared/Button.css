@@ -1,0 +1,21 @@
+.Button {
+    border: 2px solid #F2994A;
+    color: #F2994A;
+    background-color: white;
+    border-radius: 2px;
+    padding: 4px;
+    font-family: var(--font);
+    font-size: 15px;
+    font-weight: bold;
+    height:20px;
+    text-align: center;
+    transition: all 0.25s ease-in-out;
+    cursor: default;
+}
+
+
+.Button:hover, .Button:active, .Button:focus, .Button:active:focus {
+    background-color: #F2994A;
+    border: 2px solid #F2994A;
+    color: white;
+}

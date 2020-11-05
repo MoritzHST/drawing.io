@@ -1,0 +1,16 @@
+.StartScreen {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-end;
+    justify-content: center;
+    padding: 20px;
+}
+
+.StartScreen > * {
+    padding: 15px;
+    width: 250px;
+}
+
+.StartScreen > :not(:last-child) {
+    border-right: 2px solid var(--separator-color)
+}
