@@ -2,38 +2,53 @@ import React from 'react';
 import GuestButton from "./GuestButton"
 import LoginPanel from "./LoginPanel";
 import "./StartScreen.css"
+import RegisterButton from "./RegisterButton";
+import RegisterPanel from "./RegisterPanel";
+import LoginButton from "./LoginButton";
 
 class StartScreen extends React.Component {
     constructor(props) {
         super(props)
-
+        this.state = {
+            isRegistering: false
+        }
         this.handleGuest = this.handleGuest.bind(this)
         this.handleLogin = this.handleLogin.bind(this)
-    }
-    handleGuest(event){
-
+        this.handleRegister = this.handleRegister.bind(this)
     }
 
-    handleLogin(credentials){
-        console.log(JSON.stringify(credentials))
+    handleRegister(state) {
+        if (!this.state.isRegistering)
+            this.setState({
+                isRegistering: true
+            })
+    }
 
-        fetch("/users/")
-            .then(res => res.json())
-            .then(
-                (result) => {
-                    console.log(result)
-                }
-            )
+    handleGuest(event) {
+
+    }
+
+    handleLogin(data) {
+        if (this.state.isRegistering)
+            this.setState({
+                isRegistering: false
+            })
+        else if (data.error){
+            console.log(data.error)
+        }
+
     }
 
     render() {
         return (
             <div className="StartScreen">
                 <div>
-                    <LoginPanel onLogin={this.handleLogin}/>
+                    {(!this.state.isRegistering) ? <LoginPanel onLogin={this.handleLogin}/> : <RegisterPanel onRegister={this.handleRegister}/>}
                 </div>
 
                 <div>
+                    {(!this.state.isRegistering) ? <RegisterButton onClick={this.handleRegister}/> :
+                        <LoginButton onClick={this.handleLogin}/>}
                     <GuestButton onChooseGuest={this.handleGuest}/>
                 </div>
             </div>

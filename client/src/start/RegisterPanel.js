@@ -1,16 +1,18 @@
 import React from 'react';
 import "./LoginPanel.css"
-import LoginButton from "./LoginButton";
+import RegisterButton from "./RegisterButton";
 
-class LoginPanel extends React.Component {
+class RegisterPanel extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             userName: '',
-            password: ''
+            password: '',
+            password2: ''
         };
         this.handleChangeUsername = this.handleChangeUsername.bind(this);
         this.handleChangePassword = this.handleChangePassword.bind(this);
+        this.handleChangePassword2 = this.handleChangePassword2.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
     }
 
@@ -26,21 +28,22 @@ class LoginPanel extends React.Component {
         });
     }
 
+    handleChangePassword2(event) {
+        this.setState({
+            password2: event.target.value
+        });
+    }
+
     handleSubmit() {
-        fetch("/users/login", {
+        fetch("/users/", {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({
                 userName: this.state.userName,
-                password: this.state.password
+                password: this.state.password,
+                password2: this.state.password2
             })
         })
-            .then(result => result.json())
-            .then(result => {
-                localStorage.setItem("accessToken", result.accessToken)
-                this.props.onLogin(result)
-            })
-
     }
 
     render() {
@@ -54,10 +57,14 @@ class LoginPanel extends React.Component {
                     Password:
                     <input type="password" value={this.state.password} onChange={this.handleChangePassword}/>
                 </label>
-                <LoginButton onClick={this.handleSubmit}/>
+                <label>
+                    Repeat Password:
+                    <input type="password" value={this.state.password2} onChange={this.handleChangePassword2}/>
+                </label>
+                <RegisterButton onClick={this.handleSubmit} />
             </form>
         );
     }
 }
 
-export default LoginPanel;
+export default RegisterPanel;

@@ -1,4 +1,5 @@
 const mdbc = require('mongodb').MongoClient;
+const ObjectID = require('mongodb').ObjectID
 
 const url = 'mongodb://localhost:27017';
 const dbName = 'drawing_io';
@@ -23,7 +24,7 @@ let MongoClient = (function(){
                 else
                     console.log("Collection users created!");
 
-                resolve(res)
+                resolve(true)
             });
         }
 
@@ -38,19 +39,33 @@ let MongoClient = (function(){
             return this.connPromise
         }
 
-        async findOne(collection, query) {
+        async update(collection, query, data) {
             await this.connPromise
-            this.connPromise = new Promise(async resolve => this.db.collection(collection).findOne(query, {}, (err, res) => {
+            this.connPromise = new Promise(async resolve => this.db.collection(collection).update(query, data, {}, (err, res) =>{
                 if (err)
                     console.log(err)
                 resolve(res)
             }))
+
             return this.connPromise
+        }
+
+        async findOne(collection, query) {
+            await this.connPromise
+            return new Promise(async resolve => this.db.collection(collection).findOne(query, {}, (err, res) => {
+                if (err)
+                    console.log(err)
+                resolve(res)
+            }))
         }
 
 
         close(){
             this.client.close()
+        }
+
+        convertToObjectId(id){
+            return new ObjectID(id)
         }
     }
     let instance;

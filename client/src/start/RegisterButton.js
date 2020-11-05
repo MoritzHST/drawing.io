@@ -1,7 +1,7 @@
 import React from 'react';
 import Button from "../shared/Button"
 
-class LoginButton extends React.Component {
+class RegisterButton extends React.Component {
     constructor(props) {
         super(props)
 
@@ -13,14 +13,14 @@ class LoginButton extends React.Component {
     }
 
     render() {
-        const login = 'Login';
+        const register = 'Register';
 
         return (
             <div onClick={this.handleClick}>
-                <Button label={login}/>
+                <Button label={register}/>
             </div>
         );
     }
 }
 
-export default LoginButton;
+export default RegisterButton;

@@ -1,21 +1,26 @@
-import njwt from 'njwt'
-import users from '../dao/users'
+let njwt = require('njwt')
+let users = require('../dao/users')
+let secureRandom = require('secure-random');
 
-const {
-    APP_SECRET = 'something really random',
-    APP_BASE_URL = 'http://localhost:3000'
-} = process.env;
+let auth = {}
 
-export function encodeToken(tokenData) {
-    return njwt.create(tokenData, APP_SECRET).compact();
+let signingKey = secureRandom(256, {type: 'Buffer'});
+
+let loggedInUsers = {}
+
+function encodeToken(tokenData) {
+    let token = njwt.create(tokenData, signingKey);
+    loggedInUsers[tokenData] = token
+    users.update(tokenData.userId, {onlineUntil: new Date(token.body.exp * 1000)})
+    return token.compact();
 }
 
-export function decodeToken(token) {
-    return njwt.verify(token, APP_SECRET).body;
+function decodeToken(token) {
+    return njwt.verify(token, signingKey);
 }
 
 
-export const authenticate = (req, res, next) => {
+auth.authenticate = async function (req, res, next)  {
     const token = req.header('Access-Token');
     if (!token) {
         return next();
@@ -23,14 +28,12 @@ export const authenticate = (req, res, next) => {
 
     try {
         const decoded = decodeToken(token);
-        const { userId } = decoded;
+        const { userId } = decoded.body;
 
-        console.log('decoded', decoded);
-        console.log('userId', userId);
-
-        if (users.find(user => user.id === userId)) {
-            console.log('found user!');
-            req.userId = userId;
+        let result = users.read(userId)
+        let user = await result
+        if (user) {
+            req.user = user;
         }
     } catch (e) {
         return next();
@@ -39,8 +42,8 @@ export const authenticate = (req, res, next) => {
     next();
 };
 
-export async function isAuthenticated(req, res, next) {
-    if (req.userId) {
+auth.isAuthenticated = async function(req, res, next) {
+    if (req.user) {
         return next();
     }
 
@@ -48,17 +51,23 @@ export async function isAuthenticated(req, res, next) {
     res.json({ error: 'User not authenticated' });
 }
 
-export async function login(req, res) {
+auth.login = async function(req, res) {
     let data = req.body
-    let result = users.findOne(data.userName);
+    let result = users.findUserByName(data);
     let user = await result;
 
-
-    if (!user) {
+    if (!user || users.hashPassword(data.password) !== user.password) {
         res.status(401);
-        return res.json({ error: 'Invalid email or password' });
+        await res.json({ error: 'Invalid email or password' });
     }
 
-    const accessToken = encodeToken({ userId: user.id });
-    return res.json({ accessToken });
+    const accessToken = encodeToken({ userId: user._id });
+    await res.json({ accessToken });
 }
+
+auth.refresh = async function (req, res) {
+    const accessToken = encodeToken({ userId: req.user._id });
+    await res.json({ accessToken });
+}
+
+module.exports = auth;

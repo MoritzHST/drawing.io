@@ -1,20 +1,30 @@
-var createError = require('http-errors');
-var express = require('express');
-var path = require('path');
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
+const createError = require('http-errors');
+const express = require('express');
+const path = require('path');
+const cookieParser = require('cookie-parser');
+const logger = require('morgan');
+const auth = require('./auth/authentification')
+const morgan = require('morgan');
 
-var userRouter = require('./routes/users');
+const userRouter = require('./routes/users');
 
-var app = express();
+const app = express();
 
+morgan.token('host', function(req, res) {
+  return req.hostname;
+});
+
+app.use(auth.authenticate)
 
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+//app.use(morgan(':method :host :status :res[content-length] - :response-time ms'))
 
+app.get('/users/:name', auth.isAuthenticated, userRouter)
+app.post('/users/refresh', auth.isAuthenticated, userRouter)
 app.use('/users', userRouter);
 
 // catch 404 and forward to error handler
