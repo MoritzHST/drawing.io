@@ -16,6 +16,14 @@ class StartScreen extends React.Component {
 
     handleLogin(credentials){
         console.log(JSON.stringify(credentials))
+
+        fetch("/users/")
+            .then(res => res.json())
+            .then(
+                (result) => {
+                    console.log(result)
+                }
+            )
     }
 
     render() {
