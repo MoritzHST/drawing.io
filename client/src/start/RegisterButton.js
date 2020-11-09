@@ -1,5 +1,6 @@
 import React from 'react';
 import Button from "../shared/Button"
+import {withTranslation} from "react-i18next";
 
 class RegisterButton extends React.Component {
     constructor(props) {
@@ -13,14 +14,13 @@ class RegisterButton extends React.Component {
     }
 
     render() {
-        const register = 'Register';
-
+        const {t} = this.props
         return (
             <div onClick={this.handleClick}>
-                <Button label={register}/>
+                <Button label={t("start.register")}/>
             </div>
         );
     }
 }
 
-export default RegisterButton;
+export default withTranslation()(RegisterButton);

@@ -1,5 +1,6 @@
 import React from 'react';
 import Button from "../shared/Button"
+import {withTranslation} from "react-i18next";
 
 class LoginButton extends React.Component {
     constructor(props) {
@@ -13,14 +14,13 @@ class LoginButton extends React.Component {
     }
 
     render() {
-        const login = 'Login';
-
+        const {t} = this.props
         return (
             <div onClick={this.handleClick}>
-                <Button label={login}/>
+                <Button label={t("start.login")}/>
             </div>
         );
     }
 }
 
-export default LoginButton;
+export default withTranslation()(LoginButton);

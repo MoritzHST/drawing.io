@@ -48,7 +48,7 @@ auth.isAuthenticated = async function(req, res, next) {
     }
 
     res.status(401);
-    res.json({ error: 'User not authenticated' });
+    res.json({ error: req.i18n.t('user.notAuthenticated') });
 }
 
 auth.login = async function(req, res) {
@@ -58,11 +58,23 @@ auth.login = async function(req, res) {
 
     if (!user || users.hashPassword(data.password) !== user.password) {
         res.status(401);
-        await res.json({ error: 'Invalid email or password' });
+        await res.json({ error: req.i18n.t('user.wrongNameOrPassword' )});
     }
+    user.accessToken = encodeToken({ userId: user._id });
+    delete user.password
+    delete user._id
+    delete user.password2
+    await res.json({ user });
+}
 
-    const accessToken = encodeToken({ userId: user._id });
-    await res.json({ accessToken });
+auth.loginGuest = async function(req, res) {
+    let result = users.findUserByName(req);
+    let user = await result;
+    user.accessToken = encodeToken({ userId: user._id });
+    delete user.password
+    delete user._id
+    delete user.password2
+    await res.json({ user });
 }
 
 auth.refresh = async function (req, res) {

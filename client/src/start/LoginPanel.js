@@ -1,6 +1,8 @@
 import React from 'react';
 import "./LoginPanel.css"
 import LoginButton from "./LoginButton";
+import {withTranslation} from "react-i18next";
+import axios from 'axios'
 
 class LoginPanel extends React.Component {
     constructor(props) {
@@ -27,31 +29,32 @@ class LoginPanel extends React.Component {
     }
 
     handleSubmit() {
-        fetch("/users/login", {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({
-                userName: this.state.userName,
-                password: this.state.password
-            })
+        axios.post("/users/login", {
+            userName: this.state.userName,
+            password: this.state.password
         })
-            .then(result => result.json())
             .then(result => {
-                localStorage.setItem("accessToken", result.accessToken)
-                this.props.onLogin(result)
+                if (!result.data.error)
+                    localStorage.setItem("accessToken", result.data.user.accessToken)
+                this.props.onLogin(result.data)
+            })
+            .catch(error => {
+                console.log(error)
+                throw(new Error(error))
             })
 
     }
 
     render() {
+        const {t} = this.props
         return (
-            <form className="LoginPanel">
+            <form className="FormPanel">
                 <label>
-                    Username:
+                    {t("user.name")}:
                     <input type="text" value={this.state.userName} onChange={this.handleChangeUsername}/>
                 </label>
                 <label>
-                    Password:
+                    {t("user.password")}:
                     <input type="password" value={this.state.password} onChange={this.handleChangePassword}/>
                 </label>
                 <LoginButton onClick={this.handleSubmit}/>
@@ -60,4 +63,4 @@ class LoginPanel extends React.Component {
     }
 }
 
-export default LoginPanel;
+export default withTranslation()(LoginPanel);

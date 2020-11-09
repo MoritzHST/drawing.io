@@ -1,0 +1,16 @@
+{
+  "user": {
+    "nameTaken": "Username is already taken!",
+    "created": "User successfully created!",
+    "nameEmpty": "Username is empty!",
+    "passwordEmpty": "Password is empty!",
+    "passwordsNotMatching": "Passwords do not match!",
+    "nameInvalid": "Username is invalid!",
+    "notFound": "User not found!",
+    "notAuthenticated": "User not authenticated!",
+    "wrongNameOrPassword": "Wrong username or password!"
+  },
+  "lobby": {
+    "notFound": "Lobby not found!"
+  }
+}

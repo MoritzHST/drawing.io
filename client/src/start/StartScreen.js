@@ -24,8 +24,13 @@ class StartScreen extends React.Component {
             })
     }
 
-    handleGuest(event) {
-
+    handleGuest(data) {
+        if (data.error) {
+            console.log(data.error)
+        }
+        else {
+            this.props.onLogin(data)
+        }
     }
 
     handleLogin(data) {
@@ -33,8 +38,14 @@ class StartScreen extends React.Component {
             this.setState({
                 isRegistering: false
             })
-        else if (data.error){
-            console.log(data.error)
+        else{
+            if (data.error) {
+                console.log(data.error)
+            }
+            else {
+                this.props.onLogin(data)
+            }
+
         }
 
     }

@@ -1,0 +1,11 @@
+{
+  "user": {
+    "nameTaken": "Benutzername ist bereits vergeben!",
+    "created": "Benutzer erfolgreich angelegt!",
+    "nameEmpty": "Benutzername ist leer!",
+    "passwordEmpty": "Passwort ist leer!",
+    "passwordsNotMatching": "Passwörter stimmen nicht überein!",
+    "nameInvalid": "Benutzername ungültig!",
+    "notFound": "Benutzer wurde nicht gefunden!"
+  }
+}

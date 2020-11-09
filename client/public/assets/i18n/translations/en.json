@@ -1,0 +1,25 @@
+{
+  "title": "Drawing.io",
+  "start": {
+    "register": "Sign Up",
+    "login": "Login",
+    "playAsGuest": "Play as Guest"
+  },
+  "user": {
+    "name": "Username",
+    "password": "Password",
+    "passwordRepeat": "Repeat Password"
+  },
+  "lobby": {
+    "publicity": "Publicity",
+    "publicityValue": {
+      "public": "Public",
+      "private": "Private"
+    },
+    "timer": "Timer",
+    "rounds": "Rounds",
+    "newLobby": "New lobby",
+    "joinLobby": "Join Lobby",
+    "createLobby": "Create Lobby"
+  }
+}

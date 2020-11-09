@@ -1,6 +1,8 @@
 import React from 'react';
 import "./LoginPanel.css"
 import RegisterButton from "./RegisterButton";
+import {withTranslation} from "react-i18next";
+import axios from "axios";
 
 class RegisterPanel extends React.Component {
     constructor(props) {
@@ -35,36 +37,34 @@ class RegisterPanel extends React.Component {
     }
 
     handleSubmit() {
-        fetch("/users/", {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({
-                userName: this.state.userName,
-                password: this.state.password,
-                password2: this.state.password2
-            })
+        axios.post("/users/", {
+            userName: this.state.userName,
+            password: this.state.password,
+            password2: this.state.password2
         })
+
     }
 
     render() {
+        const {t} = this.props
         return (
-            <form className="LoginPanel">
+            <form className="FormPanel">
                 <label>
-                    Username:
+                    {t("user.name")}:
                     <input type="text" value={this.state.userName} onChange={this.handleChangeUsername}/>
                 </label>
                 <label>
-                    Password:
+                    {t("user.password")}:
                     <input type="password" value={this.state.password} onChange={this.handleChangePassword}/>
                 </label>
                 <label>
-                    Repeat Password:
+                    {t("user.passwordRepeat")}:
                     <input type="password" value={this.state.password2} onChange={this.handleChangePassword2}/>
                 </label>
-                <RegisterButton onClick={this.handleSubmit} />
+                <RegisterButton onClick={this.handleSubmit}/>
             </form>
         );
     }
 }
 
-export default RegisterPanel;
+export default withTranslation()(RegisterPanel);

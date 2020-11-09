@@ -18,14 +18,22 @@ let MongoClient = (function(){
         }
 
         createCollections(resolve) {
-            this.db.createCollection("users", function (err, res) {
+            this.db.createCollection("users", (err, res) => {
                 if (err)
                     console.log("Collection users already exists!");
                 else
                     console.log("Collection users created!");
 
-                resolve(true)
-            });
+                this.db.createCollection("lobbies", (err, res) => {
+                    if (err)
+                        console.log("Collection lobbies already exists!");
+                    else
+                        console.log("Collection lobbies created!");
+
+                    resolve(true)
+                });
+            })
+
         }
 
         async insert(collection, query) {
