@@ -4,7 +4,7 @@ class JoinLobby extends React.Component {
 
     render() {
         return (
-            <div>
+            <div onClick={this.props.handleJoinLobby}>
                 Join Lobby
             </div>
 

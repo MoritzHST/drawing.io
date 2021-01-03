@@ -5,6 +5,7 @@ import "./StartScreen.css"
 import RegisterButton from "./RegisterButton";
 import RegisterPanel from "./RegisterPanel";
 import LoginButton from "./LoginButton";
+import {Form} from 'react-bootstrap';
 
 class StartScreen extends React.Component {
     constructor(props) {
@@ -27,8 +28,7 @@ class StartScreen extends React.Component {
     handleGuest(data) {
         if (data.error) {
             console.log(data.error)
-        }
-        else {
+        } else {
             this.props.onLogin(data)
         }
     }
@@ -38,11 +38,10 @@ class StartScreen extends React.Component {
             this.setState({
                 isRegistering: false
             })
-        else{
+        else {
             if (data.error) {
                 console.log(data.error)
-            }
-            else {
+            } else {
                 this.props.onLogin(data)
             }
 
@@ -54,13 +53,20 @@ class StartScreen extends React.Component {
         return (
             <div className="StartScreen">
                 <div>
-                    {(!this.state.isRegistering) ? <LoginPanel onLogin={this.handleLogin}/> : <RegisterPanel onRegister={this.handleRegister}/>}
+                    {(!this.state.isRegistering) ? <LoginPanel onLogin={this.handleLogin}/> :
+                        <RegisterPanel onRegister={this.handleRegister}/>}
                 </div>
 
                 <div>
-                    {(!this.state.isRegistering) ? <RegisterButton onClick={this.handleRegister}/> :
-                        <LoginButton onClick={this.handleLogin}/>}
-                    <GuestButton onChooseGuest={this.handleGuest}/>
+                    <Form>
+                        <Form.Group>
+                            {(!this.state.isRegistering) ? <RegisterButton onClick={this.handleRegister}/> :
+                                <LoginButton onClick={this.handleLogin}/>}
+                        </Form.Group>
+                        <Form.Group>
+                            <GuestButton onChooseGuest={this.handleGuest}/>
+                        </Form.Group>
+                    </Form>
                 </div>
             </div>
         );

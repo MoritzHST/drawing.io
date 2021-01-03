@@ -49,7 +49,7 @@ let MongoClient = (function(){
 
         async update(collection, query, data) {
             await this.connPromise
-            this.connPromise = new Promise(async resolve => this.db.collection(collection).update(query, data, {}, (err, res) =>{
+            this.connPromise = new Promise(async resolve => this.db.collection(collection).updateOne(query, data, {}, (err, res) =>{
                 if (err)
                     console.log(err)
                 resolve(res)

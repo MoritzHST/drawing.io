@@ -8,6 +8,10 @@ import JoinLobby from "./lobby/JoinLobby";
 import LanguageSelector from "./LanguageSelector";
 import {withTranslation} from 'react-i18next'
 import axios from "axios";
+import AlertBox from "./shared/AlertBox";
+import { Nav, Navbar, Jumbotron } from 'react-bootstrap';
+import Lobby from "./lobby/Lobby";
+import client from "./shared/WebSocketClient"
 
 
 class App extends Component {
@@ -15,7 +19,8 @@ class App extends Component {
         super(props);
         this.state = {
             user: {},
-            state: "start"
+            state: "start",
+            error: ''
         }
 
         setInterval(_ => {
@@ -26,23 +31,41 @@ class App extends Component {
         this.handleLogin = this.handleLogin.bind(this)
         this.handleNewLobby = this.handleNewLobby.bind(this)
         this.handleJoinLobby = this.handleJoinLobby.bind(this)
+        this.handleUnmountAlert = this.handleUnmountAlert.bind(this)
+        this.handleCreateLobby = this.handleCreateLobby.bind(this)
 
         axios.interceptors.request.use(config => {
-            config.headers["Access-Token"] =  localStorage.getItem("accessToken");;
+            config.headers["Access-Token"] = localStorage.getItem("accessToken");
+
             config.params = {
-                lng : this.props.i18n.language
+                lng: this.props.i18n.language
             }
             return config;
         });
+
+        axios.interceptors.response.use(null, error => {
+            this.setState({
+                error: error.response.data.error
+            })
+        });
+    }
+
+    handleUnmountAlert() {
+        this.setState({
+            error: ''
+        })
     }
 
     refreshAccessToken() {
         let token = localStorage.getItem("accessToken");
-        if (!token)
+        console.log(token)
+        if (!token) {
             return
+        }
         axios.post("/users/refresh", {}
         ).then(data => {
             localStorage.setItem("accessToken", data.data.accessToken)
+            client.setAccessToken(data.data.accessToken)
         })
             .catch(error => {
                 this.setState({
@@ -64,21 +87,36 @@ class App extends Component {
         this.setState({state: "joinLobby"})
     }
 
+    handleCreateLobby(result) {
+        const data = result.data
+        this.setState({lobby: data, state: "lobby"})
+    }
+
     render() {
         const {t} = this.props
         return (
             <div className="App">
                 <Suspense fallback={(<div>Loading</div>)}>
-                    <div className="App-header">
-                        <h2>{t("title")}</h2>
-                        <LanguageSelector/>
-                        <UserPreviewNavigation user={this.state.user}/>
-                    </div>
-                    {this.state.state === 'start' ? <StartScreen onLogin={this.handleLogin}/> : null}
-                    {this.state.state === 'menu' ?
-                        <MainMenu handleNewLobby={this.handleNewLobby} handleJoinLobby={console.log}/> : null}
-                    {this.state.state === 'newLobby' ? <NewLobby/> : null}
-                    {this.state.state === 'joinLobby' ? <JoinLobby/> : null}
+                    <Navbar bg="light" expand="lg">
+                        <Navbar.Brand>{t("title")}</Navbar.Brand>
+                        <Navbar.Toggle aria-controls="basic-navbar-nav" />
+                        <Navbar.Collapse id="basic-navbar-nav">
+                            <Nav className="mr-auto">
+                                <LanguageSelector/>
+                                <UserPreviewNavigation user={this.state.user}/>
+                            </Nav>
+                        </Navbar.Collapse>
+                    </Navbar>
+                    {this.state.error && this.state.error !== "" ?
+                        <AlertBox unmountChild={this.handleUnmountAlert} errorMsg={this.state.error}/> : null}
+                    <Jumbotron className={"AppBody"}>
+                        {this.state.state === 'start' ? <StartScreen onLogin={this.handleLogin}/> : null}
+                        {this.state.state === 'menu' ?
+                            <MainMenu handleNewLobby={this.handleNewLobby} handleJoinLobby={console.log}/> : null}
+                        {this.state.state === 'newLobby' ? <NewLobby onCreateLobby={this.handleCreateLobby}/> : null}
+                        {this.state.state === 'joinLobby' ? <JoinLobby/> : null}
+                        {this.state.state === 'lobby'? <Lobby lobby={this.state.lobby} user={this.state.user}/> : null}
+                    </Jumbotron>
                 </Suspense>
             </div>
         );

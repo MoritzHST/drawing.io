@@ -18,7 +18,7 @@ class CreateLobbyButton extends React.Component {
     render() {
         const {t} = this.props
         return (
-            <div onClick={this.props.handleJoinLobby}>
+            <div onClick={this.props.handleCreateLobby}>
                 <Button label={t("lobby.createLobby")}/>
             </div>
         );

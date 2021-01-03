@@ -27,20 +27,21 @@ auth.authenticate = async function (req, res, next)  {
     }
 
     try {
-        const decoded = decodeToken(token);
-        const { userId } = decoded.body;
-
-        let result = users.read(userId)
-        let user = await result
-        if (user) {
-            req.user = user;
-        }
+        req.user = auth.validateToken(token)
     } catch (e) {
         return next();
     }
 
     next();
 };
+
+auth.validateToken = async function(token){
+    const decoded = decodeToken(token);
+    const { userId } = decoded.body;
+
+    let result = users.read(userId)
+    return await result
+}
 
 auth.isAuthenticated = async function(req, res, next) {
     if (req.user) {

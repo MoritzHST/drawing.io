@@ -1,5 +1,6 @@
 import React from 'react';
-
+import {NavDropdown, Navbar} from 'react-bootstrap';
+import {withTranslation} from "react-i18next";
 
 class UserPreviewNavigation extends React.Component {
     constructor(props) {
@@ -18,10 +19,15 @@ class UserPreviewNavigation extends React.Component {
     }
 
     render() {
+        const {t} = this.props
         return (
-            <div>{this.state.user.userName}</div>
+            <div>
+                {this.state.user.userName ? <NavDropdown title={this.state.user.userName} id="user-nav-dropdown">
+
+                    </NavDropdown>
+                    : <Navbar.Text>{t("user.notLoggedIn")}</Navbar.Text>}</div>
         );
     }
 }
 
-export default UserPreviewNavigation;
+export default withTranslation()(UserPreviewNavigation);

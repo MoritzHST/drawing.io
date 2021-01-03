@@ -8,7 +8,7 @@ router.get('/:lobbyId', async function (req, res, next) {
 });
 
 router.post('/', async function (req, res, next) {
-    await auth.login(req, res)
+    await lobbies.insertLobby(req, res)
 })
 
 

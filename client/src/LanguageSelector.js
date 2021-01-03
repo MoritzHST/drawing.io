@@ -1,5 +1,6 @@
 import React from 'react'
 import {withTranslation} from 'react-i18next'
+import { NavDropdown  } from 'react-bootstrap';
 
 class LanguageSelector extends React.Component {
     constructor(props) {
@@ -9,15 +10,16 @@ class LanguageSelector extends React.Component {
 
 
     changeLanguage(event) {
-        this.props.i18n.changeLanguage(event.target.value)
+        this.props.i18n.changeLanguage(event.target.getAttribute("value"))
     }
 
     render() {
+        const {t} = this.props
         return (
-            <div onChange={this.changeLanguage}>
-                <input type="radio" value="en" name="language" defaultChecked/> English
-                <input type="radio" value="de" name="language"/> Deutsch
-            </div>
+            <NavDropdown title={t("language")} id="language-nav-dropdown">
+                <NavDropdown.Item  value="en" onClick={this.changeLanguage}> English </NavDropdown.Item>
+                <NavDropdown.Item value="de" onClick={this.changeLanguage}> Deutsch </NavDropdown.Item>
+            </NavDropdown >
         )
     }
 }

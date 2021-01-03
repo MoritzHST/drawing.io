@@ -3,6 +3,7 @@ import "./LoginPanel.css"
 import RegisterButton from "./RegisterButton";
 import {withTranslation} from "react-i18next";
 import axios from "axios";
+import {Form} from "react-bootstrap";
 
 class RegisterPanel extends React.Component {
     constructor(props) {
@@ -48,21 +49,24 @@ class RegisterPanel extends React.Component {
     render() {
         const {t} = this.props
         return (
-            <form className="FormPanel">
-                <label>
-                    {t("user.name")}:
-                    <input type="text" value={this.state.userName} onChange={this.handleChangeUsername}/>
-                </label>
-                <label>
-                    {t("user.password")}:
-                    <input type="password" value={this.state.password} onChange={this.handleChangePassword}/>
-                </label>
-                <label>
-                    {t("user.passwordRepeat")}:
-                    <input type="password" value={this.state.password2} onChange={this.handleChangePassword2}/>
-                </label>
+            <Form>
+                <Form.Group controlId="formRegisterUserName">
+                    <Form.Label>{t("user.name")}</Form.Label>
+                    <Form.Control type="text" placeholder={t("user.name")} value={this.state.userName}
+                                  onChange={this.handleChangeUsername}/>
+                </Form.Group>
+                <Form.Group controlId="formRegisterPassword">
+                    <Form.Label>{t("user.password")}:</Form.Label>
+                    <Form.Control type="password" value={this.state.password} onChange={this.handleChangePassword}/>
+                </Form.Group>
+                <Form.Group>
+                    <Form.Label>{t("user.passwordRepeat")}:</Form.Label>
+                    <Form.Control type="password" value={this.state.password2} onChange={this.handleChangePassword2}/>
+                </Form.Group>
+                <Form.Group>
                 <RegisterButton onClick={this.handleSubmit}/>
-            </form>
+                </Form.Group>
+            </Form>
         );
     }
 }

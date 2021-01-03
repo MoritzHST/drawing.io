@@ -1,11 +1,13 @@
 {
   "title": "Drawing.io",
+  "language": "Language",
   "start": {
     "register": "Sign Up",
     "login": "Login",
     "playAsGuest": "Play as Guest"
   },
   "user": {
+    "notLoggedIn": "Not logged in",
     "name": "Username",
     "password": "Password",
     "passwordRepeat": "Repeat Password"

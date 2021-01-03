@@ -2,6 +2,7 @@ import React from 'react';
 import "./LoginPanel.css"
 import LoginButton from "./LoginButton";
 import {withTranslation} from "react-i18next";
+import {Form} from 'react-bootstrap';
 import axios from 'axios'
 
 class LoginPanel extends React.Component {
@@ -34,9 +35,10 @@ class LoginPanel extends React.Component {
             password: this.state.password
         })
             .then(result => {
-                if (!result.data.error)
+                if (result && !result.data.error) {
                     localStorage.setItem("accessToken", result.data.user.accessToken)
-                this.props.onLogin(result.data)
+                    this.props.onLogin(result.data)
+                }
             })
             .catch(error => {
                 console.log(error)
@@ -48,17 +50,21 @@ class LoginPanel extends React.Component {
     render() {
         const {t} = this.props
         return (
-            <form className="FormPanel">
-                <label>
-                    {t("user.name")}:
-                    <input type="text" value={this.state.userName} onChange={this.handleChangeUsername}/>
-                </label>
-                <label>
-                    {t("user.password")}:
-                    <input type="password" value={this.state.password} onChange={this.handleChangePassword}/>
-                </label>
-                <LoginButton onClick={this.handleSubmit}/>
-            </form>
+            <Form>
+                <Form.Group controlId="formLoginUserName">
+                    <Form.Label>{t("user.name")}</Form.Label>
+                    <Form.Control type="text" placeholder={t("user.name")} value={this.state.userName}
+                                  onChange={this.handleChangeUsername}/>
+                </Form.Group>
+                <Form.Group controlId="formLoginPassword">
+                    <Form.Label>{t("user.password")}:</Form.Label>
+                    <Form.Control type="password" value={this.state.password} onChange={this.handleChangePassword}/>
+                </Form.Group>
+                <Form.Group>
+                    <LoginButton onClick={this.handleSubmit}/>
+                </Form.Group>
+
+            </Form>
         );
     }
 }
