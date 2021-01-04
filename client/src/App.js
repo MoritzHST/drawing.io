@@ -33,6 +33,7 @@ class App extends Component {
         this.handleJoinLobby = this.handleJoinLobby.bind(this)
         this.handleUnmountAlert = this.handleUnmountAlert.bind(this)
         this.handleCreateLobby = this.handleCreateLobby.bind(this)
+        this.handleJoinLobbySubmit = this.handleJoinLobbySubmit.bind(this)
 
         axios.interceptors.request.use(config => {
             config.headers["Access-Token"] = localStorage.getItem("accessToken");
@@ -92,6 +93,11 @@ class App extends Component {
         this.setState({lobby: data, state: "lobby"})
     }
 
+    handleJoinLobbySubmit(result) {
+        const data = result.data
+        this.setState({lobby: data, state: "lobby"})
+    }
+
     render() {
         const {t} = this.props
         return (
@@ -112,9 +118,9 @@ class App extends Component {
                     <Jumbotron className={"AppBody"}>
                         {this.state.state === 'start' ? <StartScreen onLogin={this.handleLogin}/> : null}
                         {this.state.state === 'menu' ?
-                            <MainMenu handleNewLobby={this.handleNewLobby} handleJoinLobby={console.log}/> : null}
+                            <MainMenu handleNewLobby={this.handleNewLobby} handleJoinLobby={this.handleJoinLobby}/> : null}
                         {this.state.state === 'newLobby' ? <NewLobby onCreateLobby={this.handleCreateLobby}/> : null}
-                        {this.state.state === 'joinLobby' ? <JoinLobby/> : null}
+                        {this.state.state === 'joinLobby' ? <JoinLobby handleJoinLobbySubmit={this.handleJoinLobbySubmit}/> : null}
                         {this.state.state === 'lobby'? <Lobby lobby={this.state.lobby} user={this.state.user}/> : null}
                     </Jumbotron>
                 </Suspense>

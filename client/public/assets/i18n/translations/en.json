@@ -22,6 +22,7 @@
     "rounds": "Rounds",
     "newLobby": "New lobby",
     "joinLobby": "Join Lobby",
-    "createLobby": "Create Lobby"
+    "createLobby": "Create Lobby",
+    "token": "Accesstoken"
   }
 }

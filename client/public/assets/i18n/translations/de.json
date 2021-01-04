@@ -22,6 +22,7 @@
     "rounds": "Runden",
     "newLobby": "Neue Lobby",
     "joinLobby": "Lobby beitreten",
-    "createLobby": "Lobby erstellen"
+    "createLobby": "Lobby erstellen",
+    "token": "Zugangscode"
   }
 }

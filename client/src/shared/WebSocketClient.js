@@ -17,9 +17,6 @@ class WebSocketClient {
                 }
             }
         })
-        setTimeout(() => {
-            this._socket.emit("test", JSON.stringify({blub: 12}))
-        }, 10000)
     }
 
     getAccessToken() {
