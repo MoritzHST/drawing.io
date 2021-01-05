@@ -9,16 +9,18 @@ class LobbySocketHandler {
     }
 
     subscribeLobby() {
-        this._websocketHandler.registerEvent({}, `join_lobby`, (data) => {
+        this._websocketHandler.registerEvent({}, `join_lobby`, (data, socket) => {
             let lobby = JSON.parse(data);
+            socket.lobby = lobby.lobby
             let lobbyObj
             if (!this._lobbys[lobby.lobby.urlToken]) {
                 lobbyObj = new Lobby(lobby.lobby)
                 this._lobbys[lobby.lobby.urlToken] = lobbyObj
-            }
-            else
+            } else
                 lobbyObj = this._lobbys[lobby.lobby.urlToken]
             lobbyObj.addPlayer(lobby.user)
+
+
             this._websocketHandler.emit(`lobby$${lobby.lobby.urlToken}$new_player`, JSON.stringify({
                 newPlayer: {
                     userName: lobby.user.userName,
@@ -26,6 +28,14 @@ class LobbySocketHandler {
                 },
                 allPlayers: lobbyObj.getAllPlayers()
             }))
+
+            this._websocketHandler.registerEvent({
+                lobby: {
+                    urlToken: lobby.lobby.urlToken
+                }
+            }, `lobby$${lobby.lobby.urlToken}$chat`, message => {
+                this._websocketHandler.emit(`lobby$${lobby.lobby.urlToken}$chat`, message)
+            })
         })
     }
 

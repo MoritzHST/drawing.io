@@ -10,7 +10,9 @@ class WebSocketHandler {
 
             for (let entry in this.handlers){
                 if (Object.keys(this.handlers[entry].query).length === 0 || this.meetsQuery(socket, this.handlers[entry].query)){
-                    socket.on(entry, this.handlers[entry].callback)
+                    socket.on(entry, (data) => {
+                        this.handlers[entry].callback(data, socket)
+                    })
                 }
             }
 
@@ -42,6 +44,16 @@ class WebSocketHandler {
         eventObj.query = query
         eventObj.callback = callback
         this.handlers[event] = eventObj
+        let relevantObjects = this.getRelevantSockets(query);
+
+        for (let entry in relevantObjects) {
+            this.sockets[entry].on(event, (data) => {
+                callback(data, this.sockets[entry])
+            })
+        }
+    }
+
+    getRelevantSockets(query) {
         let relevantObjects = []
         if (Object.keys(query).length !== 0) {
             for (let entry in this.sockets) {
@@ -52,9 +64,14 @@ class WebSocketHandler {
         } else {
             relevantObjects = this.sockets
         }
+        return relevantObjects;
+    }
+
+    sendBroadcast(query, event, data){
+        let relevantObjects = this.getRelevantSockets(query);
 
         for (let entry in relevantObjects) {
-            this.sockets[entry].on(event, callback)
+            this.sockets[entry].broadcast.emit(event, data)
         }
     }
 
@@ -67,11 +84,22 @@ class WebSocketHandler {
     }
 
     meetsQuery(socket, query) {
+        return this.checkQuery(socket, query)
+    }
+
+    checkQuery(socket, query) {
+        let retVal = true;
         for (let key in query) {
-            if (socket[key] === query[key]) {
-                return true
+            if (socket.hasOwnProperty(key) && typeof socket[key] == "object" ) {
+                retVal = retVal && this.checkQuery(socket[key], query[key])
             }
+            else if (socket.hasOwnProperty(key)){
+                retVal = retVal && socket[key] === query[key]
+            }
+            else
+                retVal = retVal && false
         }
+        return retVal;
     }
 }
 

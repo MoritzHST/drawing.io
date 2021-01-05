@@ -23,6 +23,9 @@
     "newLobby": "Neue Lobby",
     "joinLobby": "Lobby beitreten",
     "createLobby": "Lobby erstellen",
-    "token": "Zugangscode"
-  }
+    "token": "Zugangscode",
+    "lobby": "Lobby"
+  },
+  "players": "Spieler",
+  "chat": "Chat"
 }

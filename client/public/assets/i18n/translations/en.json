@@ -23,6 +23,9 @@
     "newLobby": "New lobby",
     "joinLobby": "Join Lobby",
     "createLobby": "Create Lobby",
-    "token": "Accesstoken"
-  }
+    "token": "Accesstoken",
+    "lobby": "Lobby"
+  },
+  "players": "Players",
+  "chat": "Chat"
 }
